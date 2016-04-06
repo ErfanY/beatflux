@@ -10,7 +10,7 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   <servlet>
-      <servlet-name>beatfluxx</servlet-name>
+      <servlet-name>beatflux</servlet-name>
       <servlet-class>
                      com.sun.jersey.spi.container.servlet.ServletContainer
                 </servlet-class>
