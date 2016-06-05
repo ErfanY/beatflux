@@ -1,0 +1,16 @@
+262
+down vote
+accepted
+You've another instance of Tomcat 
+already running. You can confirm this by going to
+http://localhost:8080 in your webbrowser and check if you get the Tomcat default home page or a
+Tomcat-specific 404 error page. Both are equally valid evidence that Tomcat runs fine; if it didn't,
+then you would have gotten a browser specific HTTP connection timeout error message.
+
+You need to shutdown it. Go to /bin subfolder of the Tomcat installation folder and execute 
+the shutdown.bat (Windows) or shutdown.sh (Unix) script. If in vain, close Eclipse and then 
+open the task manager and kill all java and/or javaw processes. Or if you actually installed 
+it as a Windows service for some reason (this is namely intented for production and is unhelpful when you're just developing), 
+open the services manager (Start > Run > services.msc) and stop the Tomcat service. If necessary, 
+uninstall the Windows service altogether.
+For development, just the ZIP file is sufficient.
