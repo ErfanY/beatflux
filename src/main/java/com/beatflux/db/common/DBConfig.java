@@ -1,5 +1,8 @@
 package com.beatflux.db.common;
 
+/**
+ * This class includes database configurations.
+ */
 public class DBConfig {
    /** Connection pool type. */
    enum ConnectionPoolType {
@@ -29,24 +32,25 @@ public class DBConfig {
    final boolean useUnicode;
    final int leakDetectionThreshold;
    /**
-    * @param connectionPoolType
-    * @param databaseProvider
-    * @param user
-    * @param password
-    * @param databaseURI
-    * @param poolMinSize
-    * @param poolMaxSize
-    * @param autoCommit
-    * @param driver
-    * @param cachePreparedStatements
-    * @param preparedStatementCacheSize
-    * @param preparedStatementCacheLimit
-    * @param useServerPrepareStatement
-    * @param idleTimeout
-    * @param maxLifetime
-    * @param characterEncoding
-    * @param useUnicode
-    * @param leakDetectionThreshold
+    * Constructs a database configuration
+    * @param connectionPoolType - Pool implementation
+    * @param databaseProvider - Database provider
+    * @param user - Username
+    * @param password - Password
+    * @param databaseURI - URI for database
+    * @param poolMinSize - Minimum number of connections in pool
+    * @param poolMaxSize - Maximum number of connections in pool
+    * @param autoCommit - Automatic commit
+    * @param driver - Database diver
+    * @param cachePreparedStatements - Cache preparedstatements
+    * @param preparedStatementCacheSize - Cache size for prepraredstatements
+    * @param preparedStatementCacheLimit - Cache limit for preparedstatements
+    * @param useServerPrepareStatement - Use server preparestatement
+    * @param idleTimeout - Idle timeout for connection
+    * @param maxLifetime - Maximum lifetime for configuration
+    * @param characterEncoding - Character encoding for connection
+    * @param useUnicode - Use unicode
+    * @param leakDetectionThreshold - Leak detection threshold
     */
    DBConfig(ConnectionPoolType connectionPoolType, DBProvider databaseProvider, String user, String password,
          String databaseURI, int minimumPoolSize, int maximumPoolSize, boolean autoCommit, String driver,
@@ -72,7 +76,11 @@ public class DBConfig {
       this.useUnicode = useUnicode;
       this.leakDetectionThreshold = leakDetectionThreshold;
    }
-   protected static DBConfig fdi_dev = DBConfigBuilder.getBuilder().
+   
+   /**
+    * DB configuration for fdi-dev instance in AWS
+    */
+   protected static DBConfig fdi_dev = DBConfigBuilder.getBuilder(true).
          setDatabaseURI("jdbc:mysql://fdi-dev.cs0o93i288pv.us-east-1.rds.amazonaws.com:3306/fdb").
          setUser("root").
          setPassword("SWAqu3ef").

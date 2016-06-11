@@ -23,27 +23,34 @@ public class DBConfigBuilder {
    private boolean useUnicode;
    private int leakDetectionThreshold;
    
-   static DBConfigBuilder getBuilder() {
-      return new DBConfigBuilder();
+   /**
+    * Get new instance of builder
+    * @param useDefaults - Load default configuration
+    * @return DBConfigBuilder
+    */
+   static DBConfigBuilder getBuilder(boolean useDefaults) {
+      return new DBConfigBuilder(useDefaults);
    }
    
-   DBConfigBuilder() {
-      // Set defaults
-      connectionPoolType = ConnectionPoolType.HikariCP;
-      databaseProvider = DBProvider.MySQL;
-      minimumPoolSize = 10;
-      maximumPoolSize = 10;
-      autoCommit = false;
-      driver = "com.mysql.jdbc.Driver";
-      cachePreparedStatements = true;
-      preparedStatementCacheSize = 250;
-      preparedStatementCacheLimit = 2048;
-      useServerPrepareStatement = true;
-      idleTimeout = 28380000;
-      maxLifetime = 28740000;
-      characterEncoding = "UTF-8";
-      useUnicode = true;
-      leakDetectionThreshold = 10000;
+   private DBConfigBuilder(boolean useDefaults) {
+      if (useDefaults) {
+         // Set defaults
+         connectionPoolType = ConnectionPoolType.HikariCP;
+         databaseProvider = DBProvider.MySQL;
+         minimumPoolSize = 10;
+         maximumPoolSize = 10;
+         autoCommit = false;
+         driver = "com.mysql.jdbc.Driver";
+         cachePreparedStatements = true;
+         preparedStatementCacheSize = 250;
+         preparedStatementCacheLimit = 2048;
+         useServerPrepareStatement = true;
+         idleTimeout = 28380000;
+         maxLifetime = 28740000;
+         characterEncoding = "UTF-8";
+         useUnicode = true;
+         leakDetectionThreshold = 10000;
+      }
    }
    DBConfig build() {
       requireNotNullAndEmpty(user, "User cannot be null/empty");

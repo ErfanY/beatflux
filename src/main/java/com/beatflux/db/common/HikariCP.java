@@ -9,12 +9,15 @@ import org.slf4j.LoggerFactory;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+/**
+ * This class is responsible for handling HikariCP implementation of a connection pool.
+ */
 public class HikariCP implements IConnectionPool {
    private static final Logger logger = LoggerFactory.getLogger(HikariCP.class);
    private final HikariDataSource hds;
    /**
     * Constructor Limited to the package since it must be only used by
-    * {@link ConnectionPool}
+    * {@link ConnectionManager}
     */
    HikariCP(DBConfig dbc) {
       try {
@@ -25,7 +28,11 @@ public class HikariCP implements IConnectionPool {
       }
    }
 
-   // A better solution should be implemented
+   /**
+    * Builds HikariConfig from given database configuration
+    * @param dbc - Database configuration
+    * @return HikariConfig based on given configuration
+    */
    private HikariConfig buildHikariConfig(DBConfig dbc) {
       HikariConfig config = new HikariConfig();
       /*
@@ -53,6 +60,7 @@ public class HikariCP implements IConnectionPool {
       logger.info("Loading configuration for database");
       return config;
    }
+   
    @Override
    public Connection getConnection() throws SQLException {
       return hds.getConnection();
