@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.beatflux.db.common.UserDAL;
+import com.beatflux.db.dal.UserDAL;
 import com.beatflux.objects.User;
 
 @Path("/user")

@@ -1,4 +1,4 @@
-package com.beatflux.db.common;
+package com.beatflux.db.dal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.beatflux.db.common.ConnectionManager;
+import com.beatflux.db.common.DBUtils;
 import com.beatflux.objects.User;
 
 public class UserDAL {
