@@ -31,6 +31,7 @@ public class DBConfig {
    final String characterEncoding;
    final boolean useUnicode;
    final int leakDetectionThreshold;
+   final String testQuery;
    /**
     * Constructs a database configuration
     * @param connectionPoolType - Pool implementation
@@ -56,7 +57,7 @@ public class DBConfig {
          String databaseURI, int minimumPoolSize, int maximumPoolSize, boolean autoCommit, String driver,
          boolean cachePreparedStatements, int preparedStatementCacheSize, int preparedStatementCacheLimit,
          boolean useServerPrepareStatement, int idleTimeout, int maxLifetime, String characterEncoding,
-         boolean useUnicode, int leakDetectionThreshold) {
+         boolean useUnicode, int leakDetectionThreshold, String testQuery) {
       this.connectionPoolType = connectionPoolType;
       this.databaseProvider = databaseProvider;
       this.user = user;
@@ -75,6 +76,7 @@ public class DBConfig {
       this.characterEncoding = characterEncoding;
       this.useUnicode = useUnicode;
       this.leakDetectionThreshold = leakDetectionThreshold;
+      this.testQuery = testQuery;
    }
    
    /**

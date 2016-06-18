@@ -22,7 +22,7 @@ import com.beatflux.objects.User;
 public class UserRS {
    @GET
    @Path("/list")
-   @Produces("application/json")
+   @Produces(MediaType.APPLICATION_JSON)
    public Response listUser() {
       Response response = null;
       try {
@@ -38,7 +38,7 @@ public class UserRS {
 
    @GET
    @Path("/search")
-   @Produces("application/json")
+   @Produces(MediaType.APPLICATION_JSON)
    public Response searchUser(@QueryParam("user_id") int id) {
       Objects.requireNonNull(id);
       Response response = null;
@@ -55,7 +55,7 @@ public class UserRS {
 
    @GET
    @Path("/delete")
-   @Produces("application/json")
+   @Produces(MediaType.APPLICATION_JSON)
    public Response deleteUser(@QueryParam("user_id") int id) {
       Objects.requireNonNull(id);
       Response response = null;

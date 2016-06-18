@@ -22,6 +22,7 @@ public class DBConfigBuilder {
    private String characterEncoding;
    private boolean useUnicode;
    private int leakDetectionThreshold;
+   private String testQuery;
    
    /**
     * Get new instance of builder
@@ -50,6 +51,7 @@ public class DBConfigBuilder {
          characterEncoding = "UTF-8";
          useUnicode = true;
          leakDetectionThreshold = 10000;
+         testQuery = "SHOW TABLES;";
       }
    }
    DBConfig build() {
@@ -60,7 +62,7 @@ public class DBConfigBuilder {
             user, password, databaseURI, minimumPoolSize, maximumPoolSize, 
             autoCommit, driver, cachePreparedStatements, preparedStatementCacheSize, 
             preparedStatementCacheLimit, useServerPrepareStatement, idleTimeout, 
-            maxLifetime, characterEncoding, useUnicode, leakDetectionThreshold);
+            maxLifetime, characterEncoding, useUnicode, leakDetectionThreshold, testQuery);
    }
    private void requireNotNullAndEmpty(String s, String message) {
       if (s == null || s.isEmpty()) throw new RuntimeException(message);
@@ -190,5 +192,19 @@ public class DBConfigBuilder {
    DBConfigBuilder setLeakDetectionThreshold(int leakDetectionThreshold) {
       this.leakDetectionThreshold = leakDetectionThreshold;
       return this;
+   }
+
+   /**
+    * @return the testQuery
+    */
+   public String getTestQuery() {
+      return testQuery;
+   }
+
+   /**
+    * @param testQuery the testQuery to set
+    */
+   public void setTestQuery(String testQuery) {
+      this.testQuery = testQuery;
    }
 }

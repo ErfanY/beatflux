@@ -57,6 +57,7 @@ public class HikariCP implements IConnectionPool {
       config.addDataSourceProperty("characterEncoding", dbc.characterEncoding);
       config.addDataSourceProperty("useUnicode", dbc.useUnicode);
       config.setLeakDetectionThreshold(dbc.leakDetectionThreshold);
+      config.setConnectionTestQuery(dbc.testQuery);
       logger.info("Loading configuration for database");
       return config;
    }
