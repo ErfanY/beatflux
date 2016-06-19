@@ -1,4 +1,4 @@
-package com.beatflux.objects;
+package com.beatflux.rest.objects;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -12,8 +12,6 @@ public class User {
 	private String userName;
 	private String firstName;
 	private String lastName;
-	private String password;
-	private String passwordSalt;
 	private String countryCode;
 	private Date birthDate;
 	private String email;
@@ -60,24 +58,6 @@ public class User {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	@XmlAttribute
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	@XmlAttribute
-	public String getPasswordSalt() {
-		return passwordSalt;
-	}
-
-	public void setPasswordSalt(String passwordSalt) {
-		this.passwordSalt = passwordSalt;
 	}
 
 	@XmlAttribute

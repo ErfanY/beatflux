@@ -1,4 +1,4 @@
-package com.beatflux.objects;
+package com.beatflux.rest.objects;
 
 import java.sql.Timestamp;
 
@@ -63,30 +63,6 @@ public class Spot {
     */
    public void setEquipement(String equipement) {
       this.equipement = equipement;
-   }
-   /**
-    * @return the password
-    */
-   public String getPassword() {
-      return password;
-   }
-   /**
-    * @param password the password to set
-    */
-   public void setPassword(String password) {
-      this.password = password;
-   }
-   /**
-    * @return the passwordSalt
-    */
-   public String getPasswordSalt() {
-      return passwordSalt;
-   }
-   /**
-    * @param passwordSalt the passwordSalt to set
-    */
-   public void setPasswordSalt(String passwordSalt) {
-      this.passwordSalt = passwordSalt;
    }
    /**
     * @return the countryCode

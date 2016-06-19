@@ -1,4 +1,4 @@
-package com.beatflux.rest;
+package com.beatflux.rest.api;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,8 +15,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.beatflux.db.dal.UserDAL;
-import com.beatflux.objects.User;
+import com.beatflux.api.UserAPI;
+import com.beatflux.rest.objects.User;
 
 @Path("/user")
 public class UserRS {
@@ -26,8 +26,8 @@ public class UserRS {
    public Response listUser() {
       Response response = null;
       try {
-         UserDAL dal = new UserDAL();
-         List<User> s = dal.listUsers();
+         UserAPI api = new UserAPI();
+         List<User> s = api.getUserList();
          response = Response.ok(s).type(MediaType.APPLICATION_JSON).build();
       } catch (Exception e) {
          e.printStackTrace();
@@ -43,8 +43,8 @@ public class UserRS {
       Objects.requireNonNull(id);
       Response response = null;
       try {
-         UserDAL dal = new UserDAL();
-         boolean s = dal.checkRecord(id);
+         UserAPI api = new UserAPI();
+         User s = api.searchUser(id);
          response = Response.ok(s).type(MediaType.APPLICATION_JSON).build();
       } catch (Exception e) {
          e.printStackTrace();
@@ -60,8 +60,8 @@ public class UserRS {
       Objects.requireNonNull(id);
       Response response = null;
       try {
-         UserDAL dal = new UserDAL();
-         dal.deleteUser(id);
+         UserAPI api = new UserAPI();
+         api.deleteUser(id);
          response = Response.ok().type(MediaType.APPLICATION_JSON).build();
       } catch (Exception e) {
          e.printStackTrace();
@@ -77,10 +77,10 @@ public class UserRS {
       Response response = null;
       try {
          Gson gson = new GsonBuilder().create();
-         UserDAL dal = new UserDAL();
+         UserAPI api = new UserAPI();
          User s = gson.fromJson(json, User.class);
-         dal.addUser(s);
-         if (dal.checkRecord(s.getUserID())) {
+         api.addUser(s);
+         if(api.checkUser(s.getUserID())){
             response = Response.status(Status.CONFLICT).build();
          } else {
             response = Response.status(Status.CREATED).build();
@@ -99,10 +99,10 @@ public class UserRS {
       Response response = null;
       try {
          Gson gson = new GsonBuilder().create();
-         UserDAL dal = new UserDAL();
+         UserAPI api = new UserAPI();
          User s = gson.fromJson(json, User.class);
-         dal.updateUser(s);
-         if (dal.checkRecord(s.getUserID())) {
+         api.updateUser(s);
+         if (api.checkUser(s.getUserID())) {
             response = Response.status(Status.ACCEPTED).build();
          } else {
             response = Response.status(Status.NOT_FOUND).build();
