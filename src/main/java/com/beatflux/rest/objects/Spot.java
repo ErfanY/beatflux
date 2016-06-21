@@ -7,8 +7,6 @@ public class Spot {
    private String userName;
    private String name;
    private String equipement;
-   private String password;
-   private String passwordSalt;
    private String countryCode;
    private String email;
    private String phoneNumber;
@@ -53,13 +51,13 @@ public class Spot {
       this.name = name;
    }
    /**
-    * @return the equipement
+    * @return the equipment
     */
    public String getEquipement() {
       return equipement;
    }
    /**
-    * @param equipement the equipement to set
+    * @param equipement the equipment to set
     */
    public void setEquipement(String equipement) {
       this.equipement = equipement;
