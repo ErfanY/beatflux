@@ -1,12 +1,19 @@
-package com.beatflux.rest.objects;
+package com.beatflux.db.to;
+
 
 import java.sql.Timestamp;
 
-public class Spot {
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+public class SpotTO {
    private int spotID;
    private String userName;
    private String name;
    private String equipement;
+   private String password;
+   private String passwordSalt;
    private String countryCode;
    private String email;
    private String phoneNumber;
@@ -14,137 +21,125 @@ public class Spot {
    private Timestamp lastOnline;
    private double latitude;
    private double longitude;
-   /**
-    * @return the spotID
-    */
+   
+   @XmlAttribute
    public int getSpotID() {
       return spotID;
    }
-   /**
-    * @param spotID the spotID to set
-    */
-   public void setSpotID(int spotID) {
-      this.spotID = spotID;
+
+
+   public void setSpotID(int userID) {
+      this.spotID = userID;
    }
-   /**
-    * @return the userName
-    */
+   
+   @XmlAttribute
    public String getUserName() {
       return userName;
    }
-   /**
-    * @param userName the userName to set
-    */
+
    public void setUserName(String userName) {
       this.userName = userName;
    }
-   /**
-    * @return the name
-    */
+
+   @XmlAttribute
    public String getName() {
       return name;
    }
-   /**
-    * @param name the name to set
-    */
+
    public void setName(String name) {
       this.name = name;
    }
-   /**
-    * @return the equipment
-    */
-   public String getEquipement() {
-      return equipement;
+
+
+   @XmlAttribute
+   public String getPassword() {
+      return password;
    }
-   /**
-    * @param equipement the equipment to set
-    */
-   public void setEquipement(String equipement) {
-      this.equipement = equipement;
+
+   public void setPassword(String password) {
+      this.password = password;
    }
-   /**
-    * @return the countryCode
-    */
+
+   @XmlAttribute
+   public String getPasswordSalt() {
+      return passwordSalt;
+   }
+
+   public void setPasswordSalt(String passwordSalt) {
+      this.passwordSalt = passwordSalt;
+   }
+
+   @XmlAttribute
    public String getCountryCode() {
       return countryCode;
    }
-   /**
-    * @param countryCode the countryCode to set
-    */
+
    public void setCountryCode(String countryCode) {
       this.countryCode = countryCode;
    }
-   /**
-    * @return the email
-    */
+
+
+   @XmlAttribute
    public String getEmail() {
       return email;
    }
-   /**
-    * @param email the email to set
-    */
+
    public void setEmail(String email) {
       this.email = email;
    }
-   /**
-    * @return the phoneNumber
-    */
+
+   @XmlAttribute
    public String getPhoneNumber() {
       return phoneNumber;
    }
-   /**
-    * @param phoneNumber the phoneNumber to set
-    */
-   public void setPhoneNumber(String phoneNumber) {
-      this.phoneNumber = phoneNumber;
+
+   public void setPhoneNumber(String mobileNumber) {
+      this.phoneNumber = mobileNumber;
    }
-   /**
-    * @return the signupTimstamp
-    */
+
+   @XmlAttribute
    public Timestamp getSignupTimstamp() {
       return signupTimstamp;
    }
-   /**
-    * @param signupTimstamp the signupTimstamp to set
-    */
+
    public void setSignupTimstamp(Timestamp signupTimstamp) {
       this.signupTimstamp = signupTimstamp;
    }
-   /**
-    * @return the lastOnline
-    */
+
+   @XmlAttribute
    public Timestamp getLastOnline() {
       return lastOnline;
    }
-   /**
-    * @param lastOnline the lastOnline to set
-    */
+
    public void setLastOnline(Timestamp lastOnline) {
       this.lastOnline = lastOnline;
    }
-   /**
-    * @return the latitude
-    */
+
+   @XmlAttribute
    public double getLatitude() {
       return latitude;
    }
-   /**
-    * @param latitude the latitude to set
-    */
+
    public void setLatitude(double latitude) {
       this.latitude = latitude;
    }
-   /**
-    * @return the longitude
-    */
+
+   @XmlAttribute
    public double getLongitude() {
       return longitude;
    }
-   /**
-    * @param longitude the longitude to set
-    */
+
    public void setLongitude(double longitude) {
       this.longitude = longitude;
    }
-   
+
+
+   public String getEquipement() {
+      return equipement;
+   }
+
+
+   public void setEquipement(String equipement) {
+      this.equipement = equipement;
+   }
 }
