@@ -9,6 +9,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -39,11 +40,10 @@ public class SpotRS {
       }
       return response;
    }
-
    @GET
    @Path("/search/{spot_id}")
    @Produces(MediaType.APPLICATION_JSON)
-   public Response searchSpot(@QueryParam("spot_id") int id) {
+   public Response searchSpot(@PathParam("spot_id") int id) {
       Objects.requireNonNull(id);
       Response response = null;
       try {
@@ -56,7 +56,6 @@ public class SpotRS {
       }
       return response;
    }
-
    @GET
    @Path("/delete")
    @Produces(MediaType.APPLICATION_JSON)
@@ -73,7 +72,6 @@ public class SpotRS {
       }
       return response;
    }
-
    @POST
    @Path("/add")
    @Consumes(MediaType.APPLICATION_JSON)
@@ -95,7 +93,6 @@ public class SpotRS {
       }
       return response;
    }
-
    @POST
    @Path("/update")
    @Consumes(MediaType.APPLICATION_JSON)
@@ -118,4 +115,3 @@ public class SpotRS {
       return response;
    }
 }
-

@@ -2,6 +2,10 @@ package com.beatflux.rest.objects;
 
 import java.sql.Timestamp;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Spot {
    private int spotID;
    private String userName;
@@ -17,6 +21,7 @@ public class Spot {
    /**
     * @return the spotID
     */
+   @XmlAttribute
    public int getSpotID() {
       return spotID;
    }
@@ -29,6 +34,7 @@ public class Spot {
    /**
     * @return the userName
     */
+   @XmlAttribute
    public String getUserName() {
       return userName;
    }
@@ -41,6 +47,7 @@ public class Spot {
    /**
     * @return the name
     */
+   @XmlAttribute
    public String getName() {
       return name;
    }
@@ -53,6 +60,7 @@ public class Spot {
    /**
     * @return the equipment
     */
+   @XmlAttribute
    public String getEquipement() {
       return equipement;
    }
@@ -65,6 +73,7 @@ public class Spot {
    /**
     * @return the countryCode
     */
+   @XmlAttribute
    public String getCountryCode() {
       return countryCode;
    }
@@ -77,6 +86,7 @@ public class Spot {
    /**
     * @return the email
     */
+   @XmlAttribute
    public String getEmail() {
       return email;
    }
@@ -89,6 +99,7 @@ public class Spot {
    /**
     * @return the phoneNumber
     */
+   @XmlAttribute
    public String getPhoneNumber() {
       return phoneNumber;
    }
@@ -101,6 +112,7 @@ public class Spot {
    /**
     * @return the signupTimstamp
     */
+   @XmlAttribute
    public Timestamp getSignupTimstamp() {
       return signupTimstamp;
    }
@@ -113,6 +125,7 @@ public class Spot {
    /**
     * @return the lastOnline
     */
+   @XmlAttribute
    public Timestamp getLastOnline() {
       return lastOnline;
    }
@@ -125,6 +138,7 @@ public class Spot {
    /**
     * @return the latitude
     */
+   @XmlAttribute
    public double getLatitude() {
       return latitude;
    }
@@ -137,6 +151,7 @@ public class Spot {
    /**
     * @return the longitude
     */
+   @XmlAttribute
    public double getLongitude() {
       return longitude;
    }
@@ -146,5 +161,4 @@ public class Spot {
    public void setLongitude(double longitude) {
       this.longitude = longitude;
    }
-   
 }

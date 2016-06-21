@@ -6,13 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.beatflux.db.common.ConnectionManager;
 import com.beatflux.db.common.DBUtils;
 import com.beatflux.db.to.UserTO;
-import com.beatflux.rest.api.UserRS;
 
 public class UserDAL {
 	/*
