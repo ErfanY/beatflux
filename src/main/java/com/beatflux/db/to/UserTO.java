@@ -3,9 +3,6 @@ package com.beatflux.db.to;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-
 public class UserTO {
    private int userID;
    private String userName;
