@@ -25,110 +25,83 @@ public class User {
 	public int getUserID() {
 		return userID;
 	}
-
-
 	public void setUserID(int userID) {
 		this.userID = userID;
 	}
-	
 	@XmlAttribute
 	public String getUserName() {
 		return userName;
 	}
-
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-
 	@XmlAttribute
 	public String getFirstName() {
 		return firstName;
 	}
-
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-
-
 	@XmlAttribute
 	public String getLastName() {
 		return lastName;
 	}
-
-
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
 	@XmlAttribute
 	public String getCountryCode() {
 		return countryCode;
 	}
-
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
 	}
-
-
 	@XmlAttribute
 	public Date getBirthDate() {
 		return birthDate;
 	}
-
-	public void setBirthDate(Date birthDate) {
-		this.birthDate = birthDate;
+	public void setBirthDate(java.util.Date date) {
+		this.birthDate = (Date) date;
 	}
-
 	@XmlAttribute
 	public String getEmail() {
 		return email;
 	}
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
 	@XmlAttribute
 	public String getMobileNumber() {
 		return mobileNumber;
 	}
-
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
-
 	@XmlAttribute
 	public Timestamp getSignupTimstamp() {
 		return signupTimstamp;
 	}
-
 	public void setSignupTimstamp(Timestamp signupTimstamp) {
 		this.signupTimstamp = signupTimstamp;
 	}
-
 	@XmlAttribute
 	public Timestamp getLastOnline() {
 		return lastOnline;
 	}
-
 	public void setLastOnline(Timestamp lastOnline) {
 		this.lastOnline = lastOnline;
 	}
-
 	@XmlAttribute
 	public double getLatitude() {
 		return latitude;
 	}
-
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
-
 	@XmlAttribute
 	public double getLongitude() {
 		return longitude;
 	}
-
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
