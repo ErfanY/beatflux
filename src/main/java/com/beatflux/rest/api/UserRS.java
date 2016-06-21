@@ -9,17 +9,22 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.beatflux.api.UserAPI;
 import com.beatflux.rest.objects.User;
 
 @Path("/user")
 public class UserRS {
+   private static final Logger logger = LoggerFactory.getLogger(UserRS.class);
    @GET
    @Path("/list")
    @Produces(MediaType.APPLICATION_JSON)
@@ -30,16 +35,16 @@ public class UserRS {
          List<User> s = api.getUserList();
          response = Response.ok(s).type(MediaType.APPLICATION_JSON).build();
       } catch (Exception e) {
-         e.printStackTrace();
+         logger.warn("Failed to list users", e);
          response = Response.serverError().build();
       }
       return response;
    }
 
    @GET
-   @Path("/search")
+   @Path("/search/{user_id}")
    @Produces(MediaType.APPLICATION_JSON)
-   public Response searchUser(@QueryParam("user_id") int id) {
+   public Response searchUser(@PathParam("user_id") int id) {
       Objects.requireNonNull(id);
       Response response = null;
       try {
