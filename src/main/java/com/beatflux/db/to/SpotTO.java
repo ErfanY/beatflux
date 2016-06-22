@@ -63,8 +63,8 @@ public class SpotTO {
    public String getPhoneNumber() {
       return phoneNumber;
    }
-   public void setPhoneNumber(String mobileNumber) {
-      this.phoneNumber = mobileNumber;
+   public void setPhoneNumber(String phoneNumber) {
+      this.phoneNumber = phoneNumber;
    }
    public Timestamp getSignupTimstamp() {
       return signupTimstamp;
