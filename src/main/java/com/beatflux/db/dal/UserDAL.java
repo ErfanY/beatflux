@@ -24,6 +24,7 @@ public class UserDAL {
 			conn = ConnectionManager.getConnection();
 			ps = conn.prepareStatement(query);
 			rs = ps.executeQuery();
+			conn.commit();
 			while (rs.next()) {
 				UserTO user = new UserTO();
 				user.setUserID(rs.getInt("user_id"));
@@ -77,6 +78,7 @@ public class UserDAL {
 			ps.setDouble(12, user.getLatitude());
 			ps.setDouble(13, user.getLongitude());
 			ps.executeUpdate();
+			conn.commit();
 			ps.close();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -97,6 +99,7 @@ public class UserDAL {
 			ps = conn.prepareStatement(query);
 			ps.setInt(1, userId);
 			ps.executeUpdate();
+			conn.commit();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -123,6 +126,7 @@ public class UserDAL {
 			ps.setString(6, user.getEmail());
 			ps.setString(7, user.getMobileNumber());
 			ps.executeUpdate();
+			conn.commit();
 			ps.close();
 		} catch(SQLException e) {
 			throw new RuntimeException(e);
@@ -145,6 +149,7 @@ public class UserDAL {
 			ps = conn.prepareStatement(query);
 			ps.setInt(1, id);
 			rs = ps.executeQuery();
+			conn.commit();
 			if (rs.next()) {
 				return true;
 			} else {
@@ -172,6 +177,7 @@ public class UserDAL {
 			ps = conn.prepareStatement(query);
 			ps.setInt(1, id);
 			rs = ps.executeQuery();
+			conn.commit();
 			if (rs.next()) {
 				UserTO user = new UserTO();
 				user.setUserID(rs.getInt("user_id"));
@@ -200,4 +206,34 @@ public class UserDAL {
 			DBUtils.safeClose(conn);
 		}
 	}
+	
+	/*
+    * @param username String, password String
+    * @return true if user exist otherwise return false
+    */
+	public boolean checkRecord(String username, String password) {
+      String query = "SELECT * FROM users where username = ? and password = ?";
+      Connection conn = null;
+      PreparedStatement ps = null;
+      ResultSet rs = null;
+      try {
+         conn = ConnectionManager.getConnection();
+         ps = conn.prepareStatement(query);
+         ps.setString(1, username);
+         ps.setString(2, password);
+         conn.commit();
+         rs = ps.executeQuery();
+         if (rs.next()) {
+            return true;
+         } else {
+            return false;
+         }
+      } catch(SQLException e) {
+         throw new RuntimeException(e);
+      } finally {
+         DBUtils.safeClose(rs);
+         DBUtils.safeClose(ps);
+         DBUtils.safeClose(conn);
+      }
+   }
 }
