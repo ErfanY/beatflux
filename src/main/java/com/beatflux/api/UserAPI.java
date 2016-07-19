@@ -1,6 +1,8 @@
 package com.beatflux.api;
 
 import java.security.MessageDigest;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -86,9 +88,28 @@ public class UserAPI {
       ut.setLastOnline(user.getLastOnline());
       ut.setLatitude(user.getLatitude());
       ut.setLongitude(user.getLongitude());
-      ut.setPassword(gethashCode(pwdAndSalt.concat(pwdSalt)));
+      ut.setPassword(getHashCode(pwdAndSalt.concat(pwdSalt)));
       ut.setPasswordSalt(pwdSalt);
       dal.addUser(ut);
+   }
+   public void createUser(User user, String password) {
+	   String pwdSalt = getRandomString();
+	   UserDAL dal = new UserDAL();
+	      UserTO ut = new UserTO();
+	      ut.setUserName(user.getUserName());
+	      ut.setFirstName(user.getFirstName());
+	      ut.setLastName(user.getLastName());
+	      ut.setCountryCode(user.getCountryCode());
+	      ut.setBirthDate(new Date(System.currentTimeMillis()));
+	      ut.setEmail(user.getEmail());
+	      ut.setMobileNumber(user.getMobileNumber());
+	      ut.setSignupTimstamp(user.getSignupTimstamp());
+	      ut.setLastOnline(user.getLastOnline());
+	      ut.setLatitude(user.getLatitude());
+	      ut.setLongitude(user.getLongitude());
+	      ut.setPassword(getHashCode(password.concat(pwdSalt)));
+	      ut.setPasswordSalt(pwdSalt);
+	      dal.addUser(ut);
    }
    /*
     * @param user_id int
@@ -120,7 +141,7 @@ public class UserAPI {
       s.setLastOnline(user.getLastOnline());
       s.setLatitude(user.getLatitude());
       s.setLongitude(user.getLongitude());
-      s.setPassword(gethashCode(pwdAndSalt.concat(pwdSalt)));
+      s.setPassword(getHashCode(pwdAndSalt.concat(pwdSalt)));
       s.setPasswordSalt(pwdSalt);
       dal.updateUser(s);      
    }
@@ -148,7 +169,7 @@ public class UserAPI {
       return saltStr;
   }
    
-   public static String gethashCode(String pwdAndSalt) {
+   public static String getHashCode(String pwdAndSalt) {
       try{
           MessageDigest digest = MessageDigest.getInstance("SHA-256");
           byte[] hash = digest.digest(pwdAndSalt.getBytes("UTF-8"));
@@ -164,5 +185,5 @@ public class UserAPI {
       } catch(Exception ex){
          throw new RuntimeException(ex);
       }
-  }  
+  }
 }

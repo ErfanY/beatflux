@@ -132,7 +132,6 @@ public class UserRS {
    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
    public Response authenticateUser(@FormParam("email") String email) {
       Response response = null;
-      // Check password with hash and salt against database
       try {
          UserAPI api = new UserAPI();
          // Authenticate against database
@@ -163,5 +162,40 @@ public class UserRS {
       return r;
    }
    
+   @POST
+   @Path("/signup")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+   public Response createUser(
+		   @FormParam("username") String username,
+		   @FormParam("firstname") String firstname,
+		   @FormParam("lastname") String lastname,
+		   @FormParam("email") String email,
+		   @FormParam("password") String password,
+		   @FormParam("country_code") String country_code,
+		   @FormParam("mobile_number") String mobile_number) {
+	   Response response = null;
+	   UserAPI api = new UserAPI();
+	   User user = new User();
+	   try {
+		   if (api.authenticateUser(email)) {
+			   response = Response.ok().entity("Email already exist!").build();
+		   } else {
+			   // validate email TODO:
+			   user.setUserName(username);
+			   user.setFirstName(firstname);
+			   user.setLastName(lastname);
+			   user.setEmail(email);
+			   user.setCountryCode(country_code);
+			   user.setMobileNumber(mobile_number);
+			   api.createUser(user, password);
+			   response = Response.ok().entity("Congrats! You are registered :)").build();
+		   }
+	   } catch (Exception e) {
+		   logger.warn("Failed to sign up user");
+		   response = Response.serverError().build();
+	   }
+	   return response;
+   }
 }
 
