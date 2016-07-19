@@ -125,11 +125,12 @@ public class UserAPI {
       dal.updateUser(s);      
    }
    /*
-    * @param user_id int
+    * @param email String
+    * @return true if record exist false otherwise
     */
-   public boolean authenticateUser(String username, String password){
+   public boolean authenticateUser(String email){
       UserDAL dal = new UserDAL();
-      if (dal.checkRecord(username, password)){
+      if (dal.checkRecord(email)){
          return true;
       } else
          return false;

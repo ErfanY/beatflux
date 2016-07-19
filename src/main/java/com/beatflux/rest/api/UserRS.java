@@ -130,13 +130,13 @@ public class UserRS {
    @Path("/login")
    @Produces(MediaType.APPLICATION_JSON)
    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-   public Response authenticateUser(@FormParam("username") String username, @FormParam("password") String password) {
+   public Response authenticateUser(@FormParam("email") String email) {
       Response response = null;
       // Check password with hash and salt against database
       try {
          UserAPI api = new UserAPI();
          // Authenticate against database
-         if (api.authenticateUser(username, password))
+         if (api.authenticateUser(email))
           {
             Cookie cookie = new Cookie("secret", "beatfluxverysecretcookie");
             int cookieAge = (int)TimeUnit.MINUTES.toSeconds(2);

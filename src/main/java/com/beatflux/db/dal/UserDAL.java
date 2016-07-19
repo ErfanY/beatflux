@@ -208,19 +208,18 @@ public class UserDAL {
 	}
 	
 	/*
-    * @param username String, password String
+    * @param email String
     * @return true if user exist otherwise return false
     */
-	public boolean checkRecord(String username, String password) {
-      String query = "SELECT * FROM users where username = ? and password = ?";
+	public boolean checkRecord(String email) {
+      String query = "SELECT * FROM users where email = ?";
       Connection conn = null;
       PreparedStatement ps = null;
       ResultSet rs = null;
       try {
          conn = ConnectionManager.getConnection();
          ps = conn.prepareStatement(query);
-         ps.setString(1, username);
-         ps.setString(2, password);
+         ps.setString(1, email);
          conn.commit();
          rs = ps.executeQuery();
          if (rs.next()) {
