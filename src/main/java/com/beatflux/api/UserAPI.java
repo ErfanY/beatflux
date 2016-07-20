@@ -1,11 +1,10 @@
 package com.beatflux.api;
 
-import java.security.MessageDigest;
+
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.beatflux.db.dal.UserDAL;
 import com.beatflux.db.to.UserTO;
@@ -73,8 +72,8 @@ public class UserAPI {
     * @param User object
     */
    public void addUser(User user){
-      String pwdAndSalt = "default";
-      String pwdSalt = getRandomString();
+      String pwd = "default";
+      String pwdSalt = BCrypt.gensalt(12);
       UserDAL dal = new UserDAL();
       UserTO ut = new UserTO();
       ut.setUserName(user.getUserName());
@@ -88,28 +87,28 @@ public class UserAPI {
       ut.setLastOnline(user.getLastOnline());
       ut.setLatitude(user.getLatitude());
       ut.setLongitude(user.getLongitude());
-      ut.setPassword(getHashCode(pwdAndSalt.concat(pwdSalt)));
+      ut.setPassword(gethashCode(pwd, pwdSalt));
       ut.setPasswordSalt(pwdSalt);
       dal.addUser(ut);
    }
    public void createUser(User user, String password) {
-	   String pwdSalt = getRandomString();
-	   UserDAL dal = new UserDAL();
-	      UserTO ut = new UserTO();
-	      ut.setUserName(user.getUserName());
-	      ut.setFirstName(user.getFirstName());
-	      ut.setLastName(user.getLastName());
-	      ut.setCountryCode(user.getCountryCode());
-	      ut.setBirthDate(new Date(System.currentTimeMillis()));
-	      ut.setEmail(user.getEmail());
-	      ut.setMobileNumber(user.getMobileNumber());
-	      ut.setSignupTimstamp(user.getSignupTimstamp());
-	      ut.setLastOnline(user.getLastOnline());
-	      ut.setLatitude(user.getLatitude());
-	      ut.setLongitude(user.getLongitude());
-	      ut.setPassword(getHashCode(password.concat(pwdSalt)));
-	      ut.setPasswordSalt(pwdSalt);
-	      dal.addUser(ut);
+      String pwdSalt = BCrypt.gensalt(12);
+      UserDAL dal = new UserDAL();
+      UserTO ut = new UserTO();
+      ut.setUserName(user.getUserName());
+      ut.setFirstName(user.getFirstName());
+      ut.setLastName(user.getLastName());
+      ut.setCountryCode(user.getCountryCode());
+      ut.setBirthDate(new Date(System.currentTimeMillis()));
+      ut.setEmail(user.getEmail());
+      ut.setMobileNumber(user.getMobileNumber());
+      ut.setSignupTimstamp(user.getSignupTimstamp());
+      ut.setLastOnline(user.getLastOnline());
+      ut.setLatitude(user.getLatitude());
+      ut.setLongitude(user.getLongitude());
+      ut.setPassword(gethashCode(password, pwdSalt));
+      ut.setPasswordSalt(pwdSalt);
+      dal.addUser(ut);
    }
    /*
     * @param user_id int
@@ -125,8 +124,8 @@ public class UserAPI {
     * @param User object
     */
    public void updateUser(User user){
-      String pwdAndSalt = "default";
-      String pwdSalt = getRandomString();
+      String pwd = "default";
+      String pwdSalt = BCrypt.gensalt(12);
       UserDAL dal = new UserDAL();
       UserTO s = new UserTO();
       s.setUserID(user.getUserID());
@@ -141,7 +140,7 @@ public class UserAPI {
       s.setLastOnline(user.getLastOnline());
       s.setLatitude(user.getLatitude());
       s.setLongitude(user.getLongitude());
-      s.setPassword(getHashCode(pwdAndSalt.concat(pwdSalt)));
+      s.setPassword(gethashCode(pwd, pwdSalt));
       s.setPasswordSalt(pwdSalt);
       dal.updateUser(s);      
    }
@@ -156,34 +155,15 @@ public class UserAPI {
       } else
          return false;
    }
-   
-   protected String getRandomString() {
-      String RANDOMSTRCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-      StringBuilder randomStr = new StringBuilder();
-      Random rnd = new Random();
-      while (randomStr.length() < 18) {
-          int index = (int) (rnd.nextFloat() * RANDOMSTRCHARS.length());
-          randomStr.append(RANDOMSTRCHARS.charAt(index));
-      }
-      String saltStr = randomStr.toString();
-      return saltStr;
-  }
-   
-   public static String getHashCode(String pwdAndSalt) {
+
+   public static String gethashCode(String pwd, String pwdSalt) {
+      String hashPwd = null;
       try{
-          MessageDigest digest = MessageDigest.getInstance("SHA-256");
-          byte[] hash = digest.digest(pwdAndSalt.getBytes("UTF-8"));
-          StringBuffer hexString = new StringBuffer();
-
-          for (int i = 0; i < hash.length; i++) {
-              String hex = Integer.toHexString(0xff & hash[i]);
-              if(hex.length() == 1) hexString.append('0');
-              hexString.append(hex);
-          }
-
-          return hexString.toString();
+         //String pw_hash = BCrypt.hashpw(plain_password, BCrypt.gensalt()); 
+         hashPwd = BCrypt.hashpw(pwd, pwdSalt);
       } catch(Exception ex){
          throw new RuntimeException(ex);
       }
-  }
+      return hashPwd;
+   }  
 }

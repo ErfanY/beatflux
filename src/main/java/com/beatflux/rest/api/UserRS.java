@@ -129,11 +129,11 @@ public class UserRS {
    @POST
    @Path("/login")
    @Produces(MediaType.APPLICATION_JSON)
-   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+   @Consumes(MediaType.APPLICATION_FORM_URLENCODED )
    public Response authenticateUser(@FormParam("email") String email) {
       Response response = null;
+      UserAPI api = new UserAPI();
       try {
-         UserAPI api = new UserAPI();
          // Authenticate against database
          if (api.authenticateUser(email))
           {
