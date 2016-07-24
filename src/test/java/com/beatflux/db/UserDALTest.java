@@ -20,15 +20,7 @@ public class UserDALTest {
 		List<UserTO> userList = dal.listUsers();
 		assertFalse(userList.isEmpty());
 	}
-	@Test
-	public void testSearchUser() {
-		assertNotNull("object should exist", dal.searchRecord(26));
-	}
-	@Test
-	public void testDeleteUser() {
-		dal.deleteUser(26);
-		assertNotNull("object should not exist", dal.searchRecord(26));
-	}
+	
 	@Test
 	public void testAddUser() throws ParseException {
 		java.util.Calendar cal = Calendar.getInstance();
