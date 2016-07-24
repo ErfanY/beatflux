@@ -1,12 +1,9 @@
 package com.beatflux.rest.api;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
@@ -14,7 +11,6 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
@@ -46,32 +42,21 @@ public class UserRS {
       }
       return response;
    }
-   @GET
-   @Path("/search/{user_id}")
+   @POST
+   @Path("/delete")
    @Produces(MediaType.APPLICATION_JSON)
-   public Response searchUser(@PathParam("user_id") int id) {
-      Objects.requireNonNull(id);
+   @Consumes(MediaType.APPLICATION_FORM_URLENCODED )
+   public Response deleteUser(@FormParam("email") String email) {
       Response response = null;
       try {
          UserAPI api = new UserAPI();
-         User s = api.searchUser(id);
-         response = Response.ok(s).type(MediaType.APPLICATION_JSON).build();
-      } catch (Exception e) {
-         logger.warn("Failed to search user", e);
-         response = Response.serverError().build();
-      }
-      return response;
-   }
-   @GET
-   @Path("/delete/{user_id}")
-   @Produces(MediaType.APPLICATION_JSON)
-   public Response deleteUser(@PathParam("user_id") int id) {
-      Objects.requireNonNull(id);
-      Response response = null;
-      try {
-         UserAPI api = new UserAPI();
-         api.deleteUser(id);
-         response = Response.ok().type(MediaType.APPLICATION_JSON).build();
+         if (api.emailExist(email)) {
+        	 api.deleteUser(email);
+             response = Response.ok().entity("record is deleted").build();
+         } else {
+        	 response = Response.ok().entity("email does not exist!").build();
+         }
+         
       } catch (Exception e) {
          logger.warn("Failed to delete user", e);
          response = Response.serverError().build();
@@ -79,70 +64,62 @@ public class UserRS {
       return response;
    }
    @POST
-   @Path("/add")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public Response addUser(String json) {
-      Response response = null;
-      try {
-         UserAPI api = new UserAPI();
-         User s = new User();
-         //GsonBuilder gsonBuilder = new GsonBuilder();
-        // gsonBuilder.setDateFormat("M/d/yy hh:mm a"); //Format of our JSON dates
-         Gson gson = new GsonBuilder().create();
-         s = gson.fromJson(json, User.class);
-         Date date = new Date(System.currentTimeMillis());
-         s.setBirthDate(date);
-         api.addUser(s);
-         if(api.checkUser(s.getUserID())){
-            response = Response.status(Status.CONFLICT).build();
-         } else {
-            response = Response.status(Status.CREATED).build();
-         }
-      } catch (Exception e) {
-         logger.warn("Failed to add user", e);
-         return Response.serverError().build();
-      }
-      return response;
+   @Path("/signup")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+   public Response addUser(
+		   @FormParam("username") String username,
+		   @FormParam("firstname") String firstname,
+		   @FormParam("lastname") String lastname,
+		   @FormParam("password") String password,
+		   @FormParam("country_code") String country_code,
+		   @FormParam("birthdate") String birthdate,
+		   @FormParam("email") String email,
+		   @FormParam("mobile_number") String mobile_number) {
+	   Response response = null;
+	   UserAPI api = new UserAPI();
+	   User user = new User();
+	   try {
+		   if (api.emailExist(email)) {
+			   response = Response.ok().entity("Email already exist!").build();
+		   } else {
+			   SimpleDateFormat sdf = new SimpleDateFormat("yyyymmdd");
+			   java.util.Date date = sdf.parse(birthdate);
+			   java.sql.Date sqlDate = new Date(date.getTime());
+			   // validate email TODO:
+			   user.setUserName(username);
+			   user.setFirstName(firstname);
+			   user.setLastName(lastname);
+			   user.setCountryCode(country_code);
+			   user.setBirthDate(sqlDate);
+			   user.setEmail(email);
+			   user.setMobileNumber(mobile_number);
+			   api.addUser(user, password);
+			   response = Response.ok().entity("Congrats! You are registered :)").build();
+		   }
+	   } catch (Exception e) {
+		   logger.warn("Failed to sign up user");
+		   response = Response.serverError().build();
+	   }
+	   return response;
    }
-   @POST
-   @Path("/update")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public Response updateUser(String json) {
-      Response response = null;
-      try {
-         Gson gson = new GsonBuilder().create();
-         UserAPI api = new UserAPI();
-         User s = gson.fromJson(json, User.class);
-         api.updateUser(s);
-         if (api.checkUser(s.getUserID())) {
-            response = Response.status(Status.ACCEPTED).build();
-         } else {
-            response = Response.status(Status.NOT_FOUND).build();
-         }
-      } catch (Exception e) {
-         logger.warn("Failed to update user", e);
-         return Response.serverError().build();
-      }
-      return response;
-   }
-   
    @POST
    @Path("/login")
    @Produces(MediaType.APPLICATION_JSON)
    @Consumes(MediaType.APPLICATION_FORM_URLENCODED )
-   public Response authenticateUser(@FormParam("email") String email) {
+   public Response loginUser(@FormParam("email") String email, @FormParam("password") String password) {
       Response response = null;
       UserAPI api = new UserAPI();
       try {
          // Authenticate against database
-         if (api.authenticateUser(email))
+         if (api.userExist(email, password))
           {
             Cookie cookie = new Cookie("secret", "beatfluxverysecretcookie");
             int cookieAge = (int)TimeUnit.MINUTES.toSeconds(2);
             NewCookie nc = new NewCookie(cookie, "This is our first cookie", cookieAge, false);
             response = Response.ok().cookie(nc).entity("Congrats").build();
           } else {
-            response = Response.status(Status.NOT_ACCEPTABLE).entity("shut up").build();
+            response = Response.status(Status.NOT_ACCEPTABLE).entity("invalid email or password!").build();
           }
       } catch (Exception e) {
          logger.warn("Failed to login user");
@@ -150,7 +127,6 @@ public class UserRS {
       }
       return response;
    }
-   
    @GET
    @Path("checkmycookie")
    public Response checkCookie(@CookieParam("secret") String secret) {
@@ -160,42 +136,6 @@ public class UserRS {
       else 
          r = Response.status(Status.NOT_ACCEPTABLE).entity("shut up").build();
       return r;
-   }
-   
-   @POST
-   @Path("/signup")
-   @Produces(MediaType.APPLICATION_JSON)
-   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-   public Response createUser(
-		   @FormParam("username") String username,
-		   @FormParam("firstname") String firstname,
-		   @FormParam("lastname") String lastname,
-		   @FormParam("email") String email,
-		   @FormParam("password") String password,
-		   @FormParam("country_code") String country_code,
-		   @FormParam("mobile_number") String mobile_number) {
-	   Response response = null;
-	   UserAPI api = new UserAPI();
-	   User user = new User();
-	   try {
-		   if (api.authenticateUser(email)) {
-			   response = Response.ok().entity("Email already exist!").build();
-		   } else {
-			   // validate email TODO:
-			   user.setUserName(username);
-			   user.setFirstName(firstname);
-			   user.setLastName(lastname);
-			   user.setEmail(email);
-			   user.setCountryCode(country_code);
-			   user.setMobileNumber(mobile_number);
-			   api.createUser(user, password);
-			   response = Response.ok().entity("Congrats! You are registered :)").build();
-		   }
-	   } catch (Exception e) {
-		   logger.warn("Failed to sign up user");
-		   response = Response.serverError().build();
-	   }
-	   return response;
    }
 }
 
