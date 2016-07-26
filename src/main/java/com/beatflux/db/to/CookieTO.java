@@ -1,11 +1,20 @@
 package com.beatflux.db.to;
 
+import java.sql.Timestamp;
+
 public class CookieTO {
 
-   private int userId;
+   private long userId;
    private String cookieName;
    private String cookieValue;
+   private Timestamp expiryTimestamp;
    
+   public Timestamp getExpiryTimestamp() {
+      return expiryTimestamp;
+   }
+   public void setExpiryTimestamp(Timestamp expiryTimestamp) {
+      this.expiryTimestamp = expiryTimestamp;
+   }
    public String getCookieName() {
       return cookieName;
    }
@@ -18,10 +27,10 @@ public class CookieTO {
    public void setCookieValue(String cookievalue) {
       this.cookieValue = cookievalue;
    }
-   public int getUserId() {
+   public long getUserId() {
       return userId;
    }
-   public void setUserId(int userId) {
+   public void setUserId(long userId) {
       this.userId = userId;
    }  
 }

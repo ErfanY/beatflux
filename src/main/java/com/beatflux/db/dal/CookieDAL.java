@@ -28,9 +28,10 @@ public class CookieDAL {
          conn.commit();
          while (rs.next()) {
             CookieTO cookie = new CookieTO();
-            cookie.setUserId(rs.getInt("user_id"));
-            cookie.setCookieName(rs.getString("cookiename"));
-            cookie.setCookieValue(rs.getString("cookievalue"));
+            cookie.setUserId(rs.getLong("user_id"));
+            cookie.setCookieName(rs.getString("cookie_name"));
+            cookie.setCookieValue(rs.getString("cookie_value"));
+            cookie.setExpiryTimestamp(rs.getTimestamp("expiry_timestamp"));
             cookies.add(cookie);
          }
       } catch(SQLException e) {
@@ -46,16 +47,17 @@ public class CookieDAL {
     * @param CookieTO object
     */
    public void addCookie(CookieTO cookie) {
-      String query = "insert into cookies (user_id, cookiename, cookievalue," + 
-            "values (?,?,?)";
+      String query = "insert into cookies (user_id, cookie_name, cookie_value, expiry_timestamp) " + 
+            "values (?,?,?,?)";
       Connection conn = null;
       PreparedStatement ps = null;
       try {
          conn = ConnectionManager.getConnection();
          ps = conn.prepareStatement(query);
-         ps.setInt(1, cookie.getUserId());
+         ps.setLong(1, cookie.getUserId());
          ps.setString(2, cookie.getCookieName());
          ps.setString(3, cookie.getCookieValue());
+         ps.setTimestamp(4, cookie.getExpiryTimestamp());
          ps.executeUpdate();
          conn.commit();
          ps.close();
@@ -70,7 +72,7 @@ public class CookieDAL {
     * @param cookieValue String
     */
    public void deleteCookie(String cookieValue) {
-      String query = "delete from cookies where cookievalue=?";
+      String query = "delete from cookies where cookie_value=?";
       Connection conn = null;
       PreparedStatement ps = null;
       try {
@@ -91,8 +93,8 @@ public class CookieDAL {
     * @param cookieValue String
     * @return boolean
     */
-   public CookieTO checkCookieFromDataBase(String cookieValue) {
-      String query = "SELECT * FROM cookies where cookievalue = ?";
+   public CookieTO getCookie(String cookieValue) {
+      String query = "SELECT * FROM cookies where cookie_value = ?";
       Connection conn = null;
       PreparedStatement ps = null;
       ResultSet rs = null;
@@ -104,9 +106,10 @@ public class CookieDAL {
          conn.commit();
          if (rs.next()) {
                CookieTO cookie = new CookieTO();
-               cookie.setUserId(rs.getInt("user_id"));
-               cookie.setCookieName(rs.getString("cookiename"));
-               cookie.setCookieValue(rs.getString("cookievalue"));
+               cookie.setUserId(rs.getLong("user_id"));
+               cookie.setCookieName(rs.getString("cookie_name"));
+               cookie.setCookieValue(rs.getString("cookie_value"));
+               cookie.setExpiryTimestamp(rs.getTimestamp("expiry_timestamp"));
                return cookie;
          } else {
             return null;

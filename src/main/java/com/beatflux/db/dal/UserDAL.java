@@ -55,6 +55,48 @@ public class UserDAL {
       }
       return users;
    }
+   
+   /**
+    * @return list of UserTOs
+    */
+   public UserTO getUser(long userId) {
+      UserTO user = null;
+      String query = "SELECT * FROM users WHERE user_id = ?";
+      Connection conn = null;
+      PreparedStatement ps = null;
+      ResultSet rs = null;
+      try {
+         conn = ConnectionManager.getConnection();
+         ps = conn.prepareStatement(query);
+         ps.setLong(1, userId);
+         rs = ps.executeQuery();
+         conn.commit();
+         while (rs.next()) {
+            user = new UserTO();
+            user.setUserID(rs.getInt("user_id"));
+            user.setUserName(rs.getString("username"));
+            user.setFirstName(rs.getString("firstname"));
+            user.setLastName(rs.getString("lastname"));
+            user.setPassword(rs.getString("password"));
+            user.setPasswordSalt(rs.getString("password_salt"));
+            user.setCountryCode(rs.getString("country_code"));
+            user.setBirthDate(rs.getDate("birthdate"));
+            user.setEmail(rs.getString("email"));
+            user.setMobileNumber(rs.getString("mobile_number"));
+            user.setSignupTimstamp(rs.getTimestamp("signup_timestamp"));
+            user.setLastOnline(rs.getTimestamp("last_online"));
+            user.setLatitude(rs.getDouble("latitude"));
+            user.setLongitude(rs.getDouble("longitude"));
+         }
+      } catch(SQLException e) {
+         throw new RuntimeException(e);
+      } finally {
+         DBUtils.safeClose(rs);
+         DBUtils.safeClose(ps);
+         DBUtils.safeClose(conn);
+      }
+      return user;
+   }
    /**
     * Add new user into DB
     * @param UserTO 
@@ -188,4 +230,46 @@ public class UserDAL {
 	         DBUtils.safeClose(conn);
 	      }
 	   }
+   
+   /**
+    * @return UserTO by email
+    */
+   public UserTO getUser(String email) {
+      UserTO user = null;
+      String query = "SELECT * FROM users WHERE email = ?";
+      Connection conn = null;
+      PreparedStatement ps = null;
+      ResultSet rs = null;
+      try {
+         conn = ConnectionManager.getConnection();
+         ps = conn.prepareStatement(query);
+         ps.setString(1, email);
+         rs = ps.executeQuery();
+         conn.commit();
+         if (rs.next()) {
+            user = new UserTO();
+            user.setUserID(rs.getInt("user_id"));
+            user.setUserName(rs.getString("username"));
+            user.setFirstName(rs.getString("firstname"));
+            user.setLastName(rs.getString("lastname"));
+            user.setPassword(rs.getString("password"));
+            user.setPasswordSalt(rs.getString("password_salt"));
+            user.setCountryCode(rs.getString("country_code"));
+            user.setBirthDate(rs.getDate("birthdate"));
+            user.setEmail(rs.getString("email"));
+            user.setMobileNumber(rs.getString("mobile_number"));
+            user.setSignupTimstamp(rs.getTimestamp("signup_timestamp"));
+            user.setLastOnline(rs.getTimestamp("last_online"));
+            user.setLatitude(rs.getDouble("latitude"));
+            user.setLongitude(rs.getDouble("longitude"));
+         }
+      } catch(SQLException e) {
+         throw new RuntimeException(e);
+      } finally {
+         DBUtils.safeClose(rs);
+         DBUtils.safeClose(ps);
+         DBUtils.safeClose(conn);
+      }
+      return user;
+   }
 }
