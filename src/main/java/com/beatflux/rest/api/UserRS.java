@@ -1,7 +1,9 @@
 package com.beatflux.rest.api;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -21,12 +23,21 @@ import javax.ws.rs.core.Response.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.beatflux.api.CookieAPI;
 import com.beatflux.api.UserAPI;
+import com.beatflux.common.AppConfig;
 import com.beatflux.rest.objects.User;
 
 @Path("/user")
 public class UserRS {
    private static final Logger logger = LoggerFactory.getLogger(UserRS.class);
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public Response getUser(@CookieParam(AppConfig.APP_COOKIE_SECRET) String cookie) {
+      long id = new CookieAPI().validateCookie(cookie);
+      User user = new UserAPI().getUser(id);
+      return Response.ok().entity(user).type(MediaType.APPLICATION_JSON).build();
+   }
    @GET
    @Path("/list")
    @Produces(MediaType.APPLICATION_JSON)
@@ -113,32 +124,36 @@ public class UserRS {
    public Response loginUser(@FormParam("email") String email, @FormParam("password") String password) {
       Response response = null;
       UserAPI api = new UserAPI();
+      CookieAPI cookieApi = new CookieAPI();
       try {
          // Authenticate against database
          if (api.userExist(email, password))
           {
-            Cookie cookie = new Cookie("secret", "beatfluxverysecretcookie");
-            int cookieAge = (int)TimeUnit.MINUTES.toSeconds(2);
+            long userId = api.getUser(email).getUserID(); // Replace with getUser by email
+            String cookie_value = cookieApi.randomString(60);
+            Cookie cookie = new Cookie(AppConfig.APP_COOKIE_SECRET, cookie_value);
+            int cookieAge = (int)TimeUnit.MINUTES.toSeconds(10);
+            Timestamp expiryTimestamp = new Timestamp(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(cookieAge));
             NewCookie nc = new NewCookie(cookie, "This is our first cookie", cookieAge, false);
+            cookieApi.addCookie(userId, cookie_value, expiryTimestamp);
             response = Response.ok().cookie(nc).entity("Congrats").build();
           } else {
             response = Response.status(Status.NOT_ACCEPTABLE).entity("invalid email or password!").build();
           }
       } catch (Exception e) {
-         logger.warn("Failed to login user");
+         logger.warn("Failed to login user", e);
          response = Response.serverError().build();
       }
       return response;
    }
    @GET
-   @Path("checkmycookie")
-   public Response checkCookie(@CookieParam("secret") String secret) {
-      Response r = null;
-      if (secret.equals("beatfluxverysecretcookie"))
-         r = Response.ok().entity("Congrats").build();
-      else 
-         r = Response.status(Status.NOT_ACCEPTABLE).entity("shut up").build();
-      return r;
+   @Path("/logout")
+   @Produces(MediaType.APPLICATION_JSON)
+   public Response checkUserCookie(@CookieParam(value=AppConfig.APP_COOKIE_SECRET) String secret){
+      CookieAPI cap = new CookieAPI();
+      cap.validateCookie(secret);
+      cap.deleteCookie(secret);
+      return Response.ok().build(); 
    }
 }
 
