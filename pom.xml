@@ -121,9 +121,14 @@
 			<version>2.6.2</version>
 		</dependency>
 		<dependency>
-    		<groupId>org.mindrot</groupId>
-    		<artifactId>jbcrypt</artifactId>
-    		<version>0.3m</version>
+			<groupId>de.svenkubiak</groupId>
+			<artifactId>jBCrypt</artifactId>
+			<version>0.4.1</version>
+		</dependency>
+		<dependency>
+    		<groupId>javax.mail</groupId>
+    		<artifactId>mail</artifactId>
+    		<version>1.4</version>
 		</dependency>
 	</dependencies>
 </project>

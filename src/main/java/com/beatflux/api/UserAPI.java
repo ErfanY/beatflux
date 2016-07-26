@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import com.beatflux.db.dal.UserDAL;
 import com.beatflux.db.to.UserTO;
 import com.beatflux.rest.objects.User;
@@ -60,5 +63,15 @@ public class UserAPI {
    public boolean emailExist(String email) {
 	   UserDAL dal = new UserDAL();
 	   return dal.emailExist(email);
+   }
+   public boolean isValidEmail(String email) {
+	   try {
+		InternetAddress emailAddr = new InternetAddress(email);
+		emailAddr.validate();
+		return true;
+	} catch (AddressException e) {
+		e.printStackTrace();
+		return false;
+	}
    }
 }

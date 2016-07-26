@@ -86,19 +86,22 @@ public class UserRS {
 			   SimpleDateFormat sdf = new SimpleDateFormat("yyyymmdd");
 			   java.util.Date date = sdf.parse(birthdate);
 			   java.sql.Date sqlDate = new Date(date.getTime());
-			   // validate email TODO:
-			   user.setUserName(username);
-			   user.setFirstName(firstname);
-			   user.setLastName(lastname);
-			   user.setCountryCode(country_code);
-			   user.setBirthDate(sqlDate);
-			   user.setEmail(email);
-			   user.setMobileNumber(mobile_number);
-			   api.addUser(user, password);
-			   response = Response.ok().entity("Congrats! You are registered :)").build();
+			   if (!api.isValidEmail(email)) {
+				   response = Response.status(Status.NOT_ACCEPTABLE).entity("invalid email address!").build();
+			   } else {
+				   user.setUserName(username);
+				   user.setFirstName(firstname);
+				   user.setLastName(lastname);
+				   user.setCountryCode(country_code);
+				   user.setBirthDate(sqlDate);
+				   user.setEmail(email);
+				   user.setMobileNumber(mobile_number);
+				   api.addUser(user, password);
+				   response = Response.ok().entity("Congrats! You are registered :)").build();
+			   }
 		   }
 	   } catch (Exception e) {
-		   logger.warn("Failed to sign up user");
+		   logger.warn("Failed to sign up user", e);
 		   response = Response.serverError().build();
 	   }
 	   return response;
