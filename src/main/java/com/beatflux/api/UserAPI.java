@@ -2,16 +2,18 @@ package com.beatflux.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.mindrot.jbcrypt.BCrypt;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import com.beatflux.db.dal.UserDAL;
 import com.beatflux.db.to.UserTO;
+import com.beatflux.encrypt.BCryptHashImp;
+import com.beatflux.encrypt.IHashGenerator;
 import com.beatflux.rest.objects.User;
 
 public class UserAPI {
+   private IHashGenerator hashTool = new BCryptHashImp();
    /**
     * @return list of Users
     */
@@ -42,7 +44,7 @@ public class UserAPI {
       dal.deleteUser(email);
    }
    public void addUser(User user, String password) {
-      String pwdSalt = BCrypt.gensalt(12);
+      String pwdSalt = hashTool.generateSalt(12);
       UserDAL dal = new UserDAL();
       UserTO ut = new UserTO();
       ut.setUserName(user.getUserName());
@@ -52,7 +54,7 @@ public class UserAPI {
       ut.setBirthDate(user.getBirthDate());
       ut.setEmail(user.getEmail());
       ut.setMobileNumber(user.getMobileNumber());
-      ut.setPassword(BCrypt.hashpw(password, pwdSalt));
+      ut.setPassword(hashTool.hash(password, pwdSalt));
       ut.setPasswordSalt(pwdSalt);
       dal.addUser(ut);
    }
@@ -63,28 +65,6 @@ public class UserAPI {
    public boolean emailExist(String email) {
 	   UserDAL dal = new UserDAL();
 	   return dal.emailExist(email);
-   }
-   public User getUser(String email) {
-	      UserDAL dal = new UserDAL();
-	      UserTO userTO = null;
-	      User user = null;
-	      userTO = dal.getUser(email);
-	      if (userTO != null) {
-	         user = new User();
-	         user.setUserID(userTO.getUserID());
-	         user.setUserName(userTO.getUserName());
-	         user.setFirstName(userTO.getFirstName());
-	         user.setLastName(userTO.getLastName());
-	         user.setCountryCode(userTO.getCountryCode());
-	         user.setBirthDate(userTO.getBirthDate());
-	         user.setEmail(userTO.getEmail());
-	         user.setMobileNumber(userTO.getMobileNumber());
-	         user.setSignupTimstamp(userTO.getSignupTimstamp());
-	         user.setLastOnline(userTO.getLastOnline());
-	         user.setLatitude(userTO.getLatitude());
-	         user.setLongitude(userTO.getLongitude());
-	      }
-	      return user;
    }
    public boolean isValidEmail(String email) {
 	   try {

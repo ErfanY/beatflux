@@ -6,13 +6,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 import com.beatflux.db.common.ConnectionManager;
 import com.beatflux.db.common.DBUtils;
 import com.beatflux.db.to.UserTO;
+import com.beatflux.encrypt.BCryptHashImp;
+import com.beatflux.encrypt.IHashGenerator;
 
 public class UserDAL {
+   private IHashGenerator hashTool = new BCryptHashImp();
    /**
     * @return list of UserTOs
     */
@@ -153,7 +154,7 @@ public class UserDAL {
          ps.setString(1, email);
          conn.commit();
          rs = ps.executeQuery();
-         return rs.next() && BCrypt.checkpw(password, rs.getString("password"));
+         return rs.next() && hashTool.checkHash(password, rs.getString("password"));
       } catch(SQLException e) {
          throw new RuntimeException(e);
       } finally {
