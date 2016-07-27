@@ -39,6 +39,28 @@ public class UserAPI {
       }
       return users;
    }
+   public User getUser(long userId) {
+      UserDAL dal = new UserDAL();
+      UserTO userTO = null;
+      User user = null;
+      userTO = dal.getUser(userId);
+      if (userTO != null) {
+         user = new User();
+         user.setUserID(userTO.getUserID());
+         user.setUserName(userTO.getUserName());
+         user.setFirstName(userTO.getFirstName());
+         user.setLastName(userTO.getLastName());
+         user.setCountryCode(userTO.getCountryCode());
+         user.setBirthDate(userTO.getBirthDate());
+         user.setEmail(userTO.getEmail());
+         user.setMobileNumber(userTO.getMobileNumber());
+         user.setSignupTimstamp(userTO.getSignupTimstamp());
+         user.setLastOnline(userTO.getLastOnline());
+         user.setLatitude(userTO.getLatitude());
+         user.setLongitude(userTO.getLongitude());
+      }
+      return user;
+   }
    public void deleteUser(String email) {
       UserDAL dal = new UserDAL();
       dal.deleteUser(email);
@@ -63,17 +85,42 @@ public class UserAPI {
       return dal.userExist(email, password);
    }
    public boolean emailExist(String email) {
-	   UserDAL dal = new UserDAL();
-	   return dal.emailExist(email);
+      UserDAL dal = new UserDAL();
+      return dal.emailExist(email);
    }
+
    public boolean isValidEmail(String email) {
-	   try {
-		InternetAddress emailAddr = new InternetAddress(email);
-		emailAddr.validate();
-		return true;
-	} catch (AddressException e) {
-		e.printStackTrace();
-		return false;
-	}
+      try {
+         InternetAddress emailAddr = new InternetAddress(email);
+         emailAddr.validate();
+         return true;
+      } catch (AddressException e) {
+         e.printStackTrace();
+         return false;
+      }
+   }
+
+   public User getUser(String email) {
+      UserDAL dal = new UserDAL();
+      UserTO userTO = null;
+      User user = null;
+      userTO = dal.getUser(email);
+      if (userTO != null) {
+         user = new User();
+         user.setUserID(userTO.getUserID());
+         user.setUserName(userTO.getUserName());
+         user.setFirstName(userTO.getFirstName());
+         user.setLastName(userTO.getLastName());
+         user.setCountryCode(userTO.getCountryCode());
+         user.setBirthDate(userTO.getBirthDate());
+         user.setEmail(userTO.getEmail());
+         user.setMobileNumber(userTO.getMobileNumber());
+         user.setSignupTimstamp(userTO.getSignupTimstamp());
+         user.setLastOnline(userTO.getLastOnline());
+         user.setLatitude(userTO.getLatitude());
+         user.setLongitude(userTO.getLongitude());
+      }
+      return user;
+
    }
 }
