@@ -6,6 +6,9 @@ import java.util.List;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import com.beatflux.db.dal.UserDAL;
 import com.beatflux.db.to.UserTO;
 import com.beatflux.encrypt.BCryptHashImp;
