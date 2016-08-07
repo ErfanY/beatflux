@@ -2,10 +2,9 @@ package com.beatflux.rest.api;
 
 import java.util.List;
 import java.util.Objects;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -72,46 +71,83 @@ public class SpotRS {
       }
       return response;
    }
+   
    @POST
-   @Path("/add")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public Response addSpot(String json) {
+   @Path("/signup")
+   @Produces(MediaType.APPLICATION_JSON)
+   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+   public Response addSpot(
+         @FormParam("username") String username,
+         @FormParam("name") String name,
+         @FormParam("equipement") String equipement,
+         @FormParam("password") String password,
+         @FormParam("country_code") String country_code,
+         @FormParam("email") String email,
+         @FormParam("phone_number") String phone_number) {
       Response response = null;
+      SpotAPI api = new SpotAPI();
+      Spot spot = new Spot();
       try {
-         Gson gson = new GsonBuilder().create();
-         SpotAPI api = new SpotAPI();
-         Spot s = gson.fromJson(json, Spot.class);
-         api.addSpot(s);
-         if(api.checkUser(s.getSpotID())){
-            response = Response.status(Status.CONFLICT).build();
+         if (api.emailExist(email)) {
+            response = Response.ok().entity("Email already exist!").build();
          } else {
-            response = Response.status(Status.CREATED).build();
+            if (!api.isValidEmail(email)) {
+               response = Response.status(Status.NOT_ACCEPTABLE).entity("invalid email address!").build();
+            } else {
+               spot.setUserName(username);
+               spot.setName(name);
+               spot.setEquipement(equipement);
+               spot.setCountryCode(country_code);
+               spot.setEmail(email);
+               spot.setPhoneNumber(phone_number);
+               api.addSpot(spot, password);
+               response = Response.ok().entity("Congrats! You are registered :)").build();
+            }
          }
       } catch (Exception e) {
-         e.printStackTrace();
-         return Response.serverError().build();
+         logger.warn("Failed to sign up spot place!", e);
+         response = Response.serverError().build();
       }
       return response;
    }
+   
    @POST
    @Path("/update")
-   @Consumes(MediaType.APPLICATION_JSON)
-   public Response updateSpot(String json) {
+   @Produces(MediaType.APPLICATION_JSON)
+   @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+   public Response updateSpot(
+         @FormParam("username") String username,
+         @FormParam("name") String name,
+         @FormParam("equipement") String equipement,
+         @FormParam("password") String password,
+         @FormParam("country_code") String country_code,
+         @FormParam("email") String email,
+         @FormParam("phone_number") String phone_number) {
       Response response = null;
+      SpotAPI api = new SpotAPI();
+      Spot spot = new Spot();
       try {
-         Gson gson = new GsonBuilder().create();
-         SpotAPI api = new SpotAPI();
-         Spot s = gson.fromJson(json, Spot.class);
-         api.updateSpot(s);
-         if (api.checkUser(s.getSpotID())) {
-            response = Response.status(Status.ACCEPTED).build();
+         if (!api.emailExist(email)) {
+            response = Response.ok().entity("Email does not exist!").build();
          } else {
-            response = Response.status(Status.NOT_FOUND).build();
+            if (!api.isValidEmail(email)) {
+               response = Response.status(Status.NOT_ACCEPTABLE).entity("invalid email address!").build();
+            } else {
+               spot.setUserName(username);
+               spot.setName(name);
+               spot.setEquipement(equipement);
+               spot.setCountryCode(country_code);
+               spot.setEmail(email);
+               spot.setPhoneNumber(phone_number);
+               api.updateSpot(spot, password);
+               response = Response.ok().entity("Congrats! You are registered :)").build();
+            }
          }
       } catch (Exception e) {
-         e.printStackTrace();
-         return Response.serverError().build();
+         logger.warn("Failed to sign up spot place!", e);
+         response = Response.serverError().build();
       }
       return response;
    }
+   
 }

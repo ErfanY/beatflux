@@ -198,4 +198,31 @@ public class SpotDAL {
 			DBUtils.safeClose(conn);
 		}
 	}
+	
+	 /**
+    * Check if spot's email exist in DB
+    * @param email
+    * @return true if email exist, false otherwise
+    */
+   public boolean emailExist(String email) {
+         String query = "SELECT password FROM spots where email = ?";
+         Connection conn = null;
+         PreparedStatement ps = null;
+         ResultSet rs = null;
+         try {
+            conn = ConnectionManager.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, email);
+            conn.commit();
+            rs = ps.executeQuery();
+            return rs.next();
+         } catch(SQLException e) {
+            throw new RuntimeException(e);
+         } finally {
+            DBUtils.safeClose(rs);
+            DBUtils.safeClose(ps);
+            DBUtils.safeClose(conn);
+         }
+      }
+	
 }

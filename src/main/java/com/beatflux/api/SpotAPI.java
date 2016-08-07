@@ -3,11 +3,17 @@ package com.beatflux.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import com.beatflux.db.dal.SpotDAL;
 import com.beatflux.db.to.SpotTO;
+import com.beatflux.encrypt.BCryptHashImp;
+import com.beatflux.encrypt.IHashGenerator;
 import com.beatflux.rest.objects.Spot;
 
 public class SpotAPI {
+   private IHashGenerator hashTool = new BCryptHashImp();
 	/*
 	 * @return list of Spots
 	 */
@@ -63,7 +69,8 @@ public class SpotAPI {
 		SpotDAL dal = new SpotDAL();
 		dal.deleteSpot(id);
 	}
-	public void addSpot(Spot spot){
+	public void addSpot(Spot spot, String password){
+	   String pwdSalt = hashTool.generateSalt(12);
 		SpotDAL dal = new SpotDAL();
 		SpotTO s = new SpotTO();
 		s.setSpotID(spot.getSpotID());
@@ -77,8 +84,8 @@ public class SpotAPI {
 		s.setLastOnline(spot.getLastOnline());
 		s.setLatitude(spot.getLatitude());
 		s.setLongitude(spot.getLongitude());
-		s.setPassword("default");
-		s.setPasswordSalt("default");
+		s.setPassword(hashTool.hash(password, pwdSalt));
+      s.setPasswordSalt(pwdSalt);
 		dal.addSpot(s);
 	}
 	/*
@@ -94,7 +101,8 @@ public class SpotAPI {
 	/*
 	 * @param Spot object
 	 */
-	public void updateSpot(Spot spot){
+	public void updateSpot(Spot spot, String password){
+	   String pwdSalt = hashTool.generateSalt(12);
 		SpotDAL dal = new SpotDAL();
 		SpotTO s = new SpotTO();
 		s.setSpotID(spot.getSpotID());
@@ -108,8 +116,24 @@ public class SpotAPI {
 		s.setLastOnline(spot.getLastOnline());
 		s.setLatitude(spot.getLatitude());
 		s.setLongitude(spot.getLongitude());
-		s.setPassword("default");
-		s.setPasswordSalt("default");
+		s.setPassword(hashTool.hash(password, pwdSalt));
+      s.setPasswordSalt(pwdSalt);
 		dal.updateSpot(s);      
 	}
+	 
+	 public boolean emailExist(String email) {
+	      SpotDAL dal = new SpotDAL();
+	      return dal.emailExist(email);
+	   }
+	 
+	 public boolean isValidEmail(String email) {
+	      try {
+	         InternetAddress emailAddr = new InternetAddress(email);
+	         emailAddr.validate();
+	         return true;
+	      } catch (AddressException e) {
+	         e.printStackTrace();
+	         return false;
+	      }
+	   }
 }
