@@ -10,7 +10,7 @@ public class Spot {
    private int spotID;
    private String userName;
    private String name;
-   private String equipement;
+   private String equipment;
    private String countryCode;
    private String email;
    private String phoneNumber;
@@ -61,14 +61,14 @@ public class Spot {
     * @return the equipment
     */
    @XmlAttribute
-   public String getEquipement() {
-      return equipement;
+   public String getEquipment() {
+      return equipment;
    }
    /**
     * @param equipement the equipment to set
     */
-   public void setEquipement(String equipement) {
-      this.equipement = equipement;
+   public void setEquipment(String equipment) {
+      this.equipment = equipment;
    }
    /**
     * @return the countryCode

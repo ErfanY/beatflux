@@ -10,8 +10,12 @@ import java.util.List;
 import com.beatflux.db.common.ConnectionManager;
 import com.beatflux.db.common.DBUtils;
 import com.beatflux.db.to.SpotTO;
+import com.beatflux.db.to.UserTO;
+import com.beatflux.encrypt.BCryptHashImp;
+import com.beatflux.encrypt.IHashGenerator;
 
 public class SpotDAL {
+   private IHashGenerator hashTool = new BCryptHashImp();
 	/*
 	 * @return list SpotTOs
 	 */
@@ -30,7 +34,7 @@ public class SpotDAL {
 				spot.setSpotID(rs.getInt("spot_id"));
 				spot.setUserName(rs.getString("username"));
 				spot.setName(rs.getString("name"));
-				spot.setEquipement(rs.getString("equipement"));
+				spot.setEquipment(rs.getString("equipment"));
 				spot.setPassword(rs.getString("password"));
 				spot.setPasswordSalt(rs.getString("password_salt"));
 				spot.setCountryCode(rs.getString("country_code"));
@@ -65,7 +69,7 @@ public class SpotDAL {
 			ps = conn.prepareStatement(query);
 			ps.setString(1, spot.getUserName());
 			ps.setString(2, spot.getName());
-			ps.setString(3, spot.getEquipement());
+			ps.setString(3, spot.getEquipment());
 			ps.setString(4, spot.getPassword());
 			ps.setString(5, spot.getPasswordSalt());
 			ps.setString(6, spot.getCountryCode());
@@ -116,7 +120,7 @@ public class SpotDAL {
 			ps = conn.prepareStatement(query);
 			ps.setString(1, spot.getUserName());
 			ps.setString(2, spot.getName());
-			ps.setString(3, spot.getEquipement());
+			ps.setString(3, spot.getEquipment());
 			ps.setString(4, spot.getPassword());
 			ps.setString(5, spot.getPasswordSalt());
 			ps.setString(6, spot.getEmail());
@@ -176,7 +180,7 @@ public class SpotDAL {
 				spot.setSpotID(rs.getInt("spot_id"));
 				spot.setUserName(rs.getString("username"));
 				spot.setName(rs.getString("name"));
-				spot.setEquipement(rs.getString("equipement"));
+				spot.setEquipment(rs.getString("equipment"));
 				spot.setPassword(rs.getString("password"));
 				spot.setPasswordSalt(rs.getString("password_salt"));
 				spot.setCountryCode(rs.getString("country_code"));
@@ -224,5 +228,72 @@ public class SpotDAL {
             DBUtils.safeClose(conn);
          }
       }
+   
+   /**
+    * Check if spot already exist in DB using email and password
+    * @param email
+    * @param password
+    * @return true if spot exist otherwise return false
+    */
+   public boolean spotExist(String email, String password) {
+      String query = "SELECT password FROM spots where email = ?";
+      Connection conn = null;
+      PreparedStatement ps = null;
+      ResultSet rs = null;
+      try {
+         conn = ConnectionManager.getConnection();
+         ps = conn.prepareStatement(query);
+         ps.setString(1, email);
+         conn.commit();
+         rs = ps.executeQuery();
+         return rs.next() && hashTool.checkHash(password, rs.getString("password"));
+      } catch(SQLException e) {
+         throw new RuntimeException(e);
+      } finally {
+         DBUtils.safeClose(rs);
+         DBUtils.safeClose(ps);
+         DBUtils.safeClose(conn);
+      }
+   }
 	
+   /**
+    * @return SpotTO by email
+    */
+   public SpotTO getSpot(String email) {
+      SpotTO spot = null;
+      String query = "SELECT * FROM spots WHERE email = ?";
+      Connection conn = null;
+      PreparedStatement ps = null;
+      ResultSet rs = null;
+      try {
+         conn = ConnectionManager.getConnection();
+         ps = conn.prepareStatement(query);
+         ps.setString(1, email);
+         rs = ps.executeQuery();
+         conn.commit();
+         if (rs.next()) {
+            spot = new SpotTO();
+            spot.setSpotID(rs.getInt("spot_id"));
+            spot.setUserName(rs.getString("username"));
+            spot.setName(rs.getString("name"));
+            spot.setEquipment(rs.getString("equipment"));
+            spot.setPassword(rs.getString("password"));
+            spot.setPasswordSalt(rs.getString("password_salt"));
+            spot.setCountryCode(rs.getString("country_code"));
+            spot.setEmail(rs.getString("email"));
+            spot.setPhoneNumber(rs.getString("phone_number"));
+            spot.setSignupTimstamp(rs.getTimestamp("signup_timestamp"));
+            spot.setLastOnline(rs.getTimestamp("last_online"));
+            spot.setLatitude(rs.getDouble("latitude"));
+            spot.setLongitude(rs.getDouble("longitude"));
+         }
+      } catch(SQLException e) {
+         throw new RuntimeException(e);
+      } finally {
+         DBUtils.safeClose(rs);
+         DBUtils.safeClose(ps);
+         DBUtils.safeClose(conn);
+      }
+      return spot;
+   }
 }

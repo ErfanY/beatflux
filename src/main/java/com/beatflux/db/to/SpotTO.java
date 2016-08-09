@@ -7,7 +7,7 @@ public class SpotTO {
    private int spotID;
    private String userName;
    private String name;
-   private String equipement;
+   private String equipment;
    private String password;
    private String passwordSalt;
    private String countryCode;
@@ -90,10 +90,10 @@ public class SpotTO {
    public void setLongitude(double longitude) {
       this.longitude = longitude;
    }
-   public String getEquipement() {
-      return equipement;
+   public String getEquipment() {
+      return equipment;
    }
-   public void setEquipement(String equipement) {
-      this.equipement = equipement;
+   public void setEquipment(String equipment) {
+      this.equipment = equipment;
    }
 }

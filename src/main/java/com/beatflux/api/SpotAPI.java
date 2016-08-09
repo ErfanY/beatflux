@@ -7,10 +7,13 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import com.beatflux.db.dal.SpotDAL;
+import com.beatflux.db.dal.UserDAL;
 import com.beatflux.db.to.SpotTO;
+import com.beatflux.db.to.UserTO;
 import com.beatflux.encrypt.BCryptHashImp;
 import com.beatflux.encrypt.IHashGenerator;
 import com.beatflux.rest.objects.Spot;
+import com.beatflux.rest.objects.User;
 
 public class SpotAPI {
    private IHashGenerator hashTool = new BCryptHashImp();
@@ -26,7 +29,7 @@ public class SpotAPI {
 			spot.setSpotID(st.getSpotID()); 
 			spot.setUserName(st.getUserName());
 			spot.setName(st.getName());
-			spot.setEquipement(st.getEquipement());
+			spot.setEquipment(st.getEquipment());
 			spot.setCountryCode(st.getCountryCode());
 			spot.setEmail(st.getEmail());
 			spot.setPhoneNumber(st.getPhoneNumber());
@@ -50,7 +53,7 @@ public class SpotAPI {
 			spot.setSpotID(s.getSpotID());
 			spot.setUserName(s.getUserName());
 			spot.setName(s.getName());
-			spot.setEquipement(s.getEquipement());
+			spot.setEquipment(s.getEquipment());
 			spot.setCountryCode(s.getCountryCode());
 			spot.setEmail(s.getEmail());
 			spot.setPhoneNumber(s.getPhoneNumber());
@@ -76,7 +79,7 @@ public class SpotAPI {
 		s.setSpotID(spot.getSpotID());
 		s.setUserName(spot.getUserName());
 		s.setName(spot.getName());
-		s.setEquipement(spot.getEquipement());
+		s.setEquipment(spot.getEquipment());
 		s.setCountryCode(spot.getCountryCode());
 		s.setEmail(spot.getEmail());
 		s.setPhoneNumber(spot.getPhoneNumber());
@@ -108,7 +111,7 @@ public class SpotAPI {
 		s.setSpotID(spot.getSpotID());
 		s.setUserName(spot.getUserName());
 		s.setName(spot.getName());
-		s.setEquipement(spot.getEquipement());
+		s.setEquipment(spot.getEquipment());
 		s.setCountryCode(spot.getCountryCode());
 		s.setEmail(spot.getEmail());
 		s.setPhoneNumber(spot.getPhoneNumber());
@@ -135,5 +138,33 @@ public class SpotAPI {
 	         e.printStackTrace();
 	         return false;
 	      }
+	   }
+	 
+	 public boolean spotExist(String email, String password) {
+	      SpotDAL dal = new SpotDAL();
+	      return dal.spotExist(email, password);
+	   }
+	 
+	 public Spot getSpot(String email) {
+	      SpotDAL dal = new SpotDAL();
+	      SpotTO spotTO = null;
+	      Spot spot = null;
+	      spotTO = dal.getSpot(email);
+	      if (spotTO != null) {
+	         spot = new Spot();
+	         spot.setSpotID(spotTO.getSpotID());
+	         spot.setUserName(spotTO.getUserName());
+	         spot.setName(spotTO.getName());
+	         spot.setEquipment(spotTO.getEquipment());
+	         spot.setCountryCode(spotTO.getCountryCode());
+	         spot.setEmail(spotTO.getEmail());
+	         spot.setPhoneNumber(spotTO.getPhoneNumber());
+	         spot.setSignupTimstamp(spotTO.getSignupTimstamp());
+	         spot.setLastOnline(spotTO.getLastOnline());
+	         spot.setLatitude(spotTO.getLatitude());
+	         spot.setLongitude(spotTO.getLongitude());
+	      }
+	      return spot;
+
 	   }
 }
