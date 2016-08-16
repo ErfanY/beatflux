@@ -73,9 +73,9 @@ public class SpotAPI {
       s.setPasswordSalt(pwdSalt);
       dal.updateSpot(s);      
    }
-   public void deleteSpot(int id){
+   public void deleteSpot(String email){
       SpotDAL dal = new SpotDAL();
-      dal.deleteSpot(id);
+      dal.deleteSpot(email);
    }
    public Spot searchSpot(int id){
       SpotDAL dal = new SpotDAL();

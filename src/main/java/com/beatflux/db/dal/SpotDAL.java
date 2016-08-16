@@ -117,17 +117,19 @@ public class SpotDAL {
       }
    }
    /**
-    * @param spot_id int
+    * @param email String
     */
-   public void deleteSpot(int spotId) {
-      String query = "delete from spots where spot_id=?";
+   public void deleteSpot(String email) {
+      String query = "delete from spots where email=?";
       Connection conn = null;
       PreparedStatement ps = null;
       try {
          conn = ConnectionManager.getConnection();
          ps = conn.prepareStatement(query);
-         ps.setInt(1, spotId);
+         ps.setString(1, email);
+         conn.commit();
          ps.executeUpdate();
+         conn.commit();
       } catch (SQLException e) {
          throw new RuntimeException(e);
       } finally {

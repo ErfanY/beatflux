@@ -120,14 +120,15 @@ public class SpotRS {
          return Response.serverError().build();
       }
    }
-   @GET
+   @POST
    @Path("/delete")
    @Produces(MediaType.APPLICATION_JSON)
-   public Response deleteSpot(@QueryParam("spot_id") int id) {
-      Objects.requireNonNull(id);
+   @Consumes(MediaType.APPLICATION_FORM_URLENCODED )
+   public Response deleteSpot(@FormParam("email") String email) {
+      Objects.requireNonNull(email);
       try {
          SpotAPI api = new SpotAPI();
-         api.deleteSpot(id);
+         api.deleteSpot(email);
          return Response.ok().type(MediaType.APPLICATION_JSON).build();
       } catch (Exception e) {
          e.printStackTrace();
