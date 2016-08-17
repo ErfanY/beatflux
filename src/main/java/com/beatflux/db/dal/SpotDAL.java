@@ -92,8 +92,8 @@ public class SpotDAL {
     * @param SpotTO object
     */
    public void updateSpot(SpotTO spot) {
-      String query = "update spots set username=?, name=?, equipment=?, password=?, password_salt=?" +
-            "email=?, phone_number=?, where spot_id=?";
+      String query = "update spots set username=?, name=?, equipment=?, password=?, password_salt=?," +
+            "phone_number=? where email = ?";
       Connection conn = null;
       PreparedStatement ps = null;
       try {
@@ -104,10 +104,10 @@ public class SpotDAL {
          ps.setString(3, spot.getEquipment());
          ps.setString(4, spot.getPassword());
          ps.setString(5, spot.getPasswordSalt());
-         ps.setString(6, spot.getEmail());
-         ps.setString(7, spot.getPhoneNumber());
-         ps.setInt(8, spot.getSpotID());
+         ps.setString(6, spot.getPhoneNumber());
+         ps.setString(7, spot.getEmail());
          ps.executeUpdate();
+         conn.commit();
          ps.close();
       } catch(SQLException e) {
          throw new RuntimeException(e);
@@ -120,7 +120,7 @@ public class SpotDAL {
     * @param email String
     */
    public void deleteSpot(String email) {
-      String query = "delete from spots where email=?";
+      String query = "delete from spots where email = ?";
       Connection conn = null;
       PreparedStatement ps = null;
       try {
@@ -250,7 +250,7 @@ public class SpotDAL {
     * @return true if email exist, false otherwise
     */
    public boolean emailExist(String email) {
-      String query = "SELECT password FROM spots where email = ?";
+      String query = "SELECT password FROM spots where email=?";
       Connection conn = null;
       PreparedStatement ps = null;
       ResultSet rs = null;
