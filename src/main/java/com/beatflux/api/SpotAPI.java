@@ -77,7 +77,7 @@ public class SpotAPI {
       SpotDAL dal = new SpotDAL();
       dal.deleteSpot(email);
    }
-   public Spot searchSpot(int id){
+   public Spot searchSpot(long id){
       SpotDAL dal = new SpotDAL();
       Spot spot = new Spot();
       SpotTO s = dal.searchSpot(id); 
@@ -136,12 +136,5 @@ public class SpotAPI {
          e.printStackTrace();
          return false;
       }
-   }
-   public boolean checkUser(int id){
-      SpotDAL dal = new SpotDAL();
-      if (dal.checkRecord(id))
-         return true;
-      else
-         return false;
    }
 }

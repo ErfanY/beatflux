@@ -13,7 +13,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
@@ -25,8 +24,10 @@ import org.slf4j.LoggerFactory;
 
 import com.beatflux.api.CookieAPI;
 import com.beatflux.api.SpotAPI;
+import com.beatflux.api.UserAPI;
 import com.beatflux.common.AppConfig;
 import com.beatflux.rest.objects.Spot;
+import com.beatflux.rest.objects.User;
 
 @Path("/spot")
 public class SpotRS {
@@ -197,5 +198,21 @@ public class SpotRS {
          return Response.serverError().build();
       } 
       
+   }
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public Response getSpot(@CookieParam(AppConfig.APP_COOKIE_SECRET) String cookie) {
+      try {
+         long id = new CookieAPI().validateCookie(cookie);
+         Spot spot = new SpotAPI().searchSpot(id);
+         if (spot == null) {
+            return Response.ok().entity("Please login first!").build();
+         } else {
+            return Response.ok().entity(spot).type(MediaType.APPLICATION_JSON).build();
+         }
+      } catch (Exception e) {
+         logger.warn("Failed to get user", e);
+         return Response.serverError().build();
+      }
    }
 }

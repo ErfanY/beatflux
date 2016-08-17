@@ -141,7 +141,7 @@ public class SpotDAL {
     * @param spot_id int
     * @return SpotTO object
     */
-   public SpotTO searchSpot(int id) {
+   public SpotTO searchSpot(long id) {
       String query = "SELECT * FROM spots where spot_id = ?";
       Connection conn = null;
       PreparedStatement ps = null;
@@ -149,7 +149,7 @@ public class SpotDAL {
       try {
          conn = ConnectionManager.getConnection();
          ps = conn.prepareStatement(query);
-         ps.setInt(1, id);
+         ps.setLong(1, id);
          rs = ps.executeQuery();
          if (rs.next()) {
             SpotTO spot = new SpotTO();
