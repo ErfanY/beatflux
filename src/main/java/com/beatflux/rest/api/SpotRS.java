@@ -24,10 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import com.beatflux.api.CookieAPI;
 import com.beatflux.api.SpotAPI;
-import com.beatflux.api.UserAPI;
 import com.beatflux.common.AppConfig;
 import com.beatflux.rest.objects.Spot;
-import com.beatflux.rest.objects.User;
 
 @Path("/spot")
 public class SpotRS {
